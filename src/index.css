@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .sticky, .fixed {
+    position: static !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

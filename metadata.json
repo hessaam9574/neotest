@@ -1,0 +1,8 @@
+{
+  "name": "آزمون شخصیت نئو",
+  "description": "NEO Personality Inventory – Revised (NEO-PI-R)",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
