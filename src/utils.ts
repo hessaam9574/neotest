@@ -6,23 +6,27 @@ import { UserData, ResultsData, ResultItem, Level5, Level3 } from "./types";
 export function getT(scale: string, raw: number, gender: 'female' | 'male'): number {
   const key = `${scale}_${gender === 'female' ? 'زن' : 'مرد'}`;
   const lookup = TS[key];
-  if (!lookup) return raw; // Fallback to raw if not found
+
+  // SAFETY: a missing norm key must NOT silently return a raw score as if it were a T-score.
+  // With the complete TS table this branch should never run; if it does, it signals a data gap.
+  if (!lookup) {
+    if (typeof console !== 'undefined') {
+      console.error(`[NEO] Missing norm table for "${key}". Returning T=50 (neutral) to avoid invalid quadrant placement. Fix scoringData.ts.`);
+    }
+    return 50; // neutral midpoint — prevents a raw score from masquerading as a T-score
+  }
 
   const sraw = String(raw);
   if (lookup[sraw] !== undefined) return lookup[sraw];
 
+  // clamp to nearest available raw within the table
   let best: number | null = null;
-  let minDiff = 99999;
-
+  let minDiff = Infinity;
   for (const k in lookup) {
     const diff = Math.abs(parseInt(k) - raw);
-    if (diff < minDiff) {
-      minDiff = diff;
-      best = lookup[k];
-    }
+    if (diff < minDiff) { minDiff = diff; best = lookup[k]; }
   }
-
-  return best !== null ? best : raw;
+  return best !== null ? best : 50;
 }
 
 export function getLevel5(t: number): Level5 {
